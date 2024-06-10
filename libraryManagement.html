@@ -46,7 +46,6 @@
             </li>
           </ul>
         </li> -->
-
       </ul>
     </div>
 
@@ -80,7 +79,7 @@
       let returnedbooks = document.getElementById("returnedbooks");
 
       form.addEventListener("submit", addBook);
-      books.addEventListener('click',payFine);
+      books.addEventListener("click", payFine);
 
       window.addEventListener("DOMContentLoaded", () => {
         axios
@@ -100,84 +99,82 @@
         const date1 = new Date(r);
         const date2 = new Date();
         // console.log(date1,date2)
-        if(date1>date2)
-        return 0;
+        if (date1 > date2) return 0;
         const differenceInMilliseconds = date2 - date1;
 
         const differenceInHours = Math.floor(
           differenceInMilliseconds / (1000 * 60 * 60)
         );
 
-        return (differenceInHours*10);
+        return differenceInHours * 10;
       }
 
       function showOnScreen(book) {
-        if(!book.returnstatus){
+        if (!book.returnstatus) {
           var li = document.createElement("li");
-        li.className = "p-5 bg-neutral-700 text-white";
-        li.appendChild(document.createTextNode("Book name: " + book.bookname));
-        // li.appendChild(document.createTextNode(book.bookname));
-        li.appendChild(document.createElement("br"));
-        li.appendChild(
-          document.createTextNode(
-            "Book taken on: " + new Date(book.bookissue).toLocaleString()
-          )
-        );
-        li.appendChild(document.createElement("br"));
-        li.appendChild(
-          document.createTextNode(
-            "Book return date: " + new Date(book.bookreturn).toLocaleString()
-          )
-        );
-        li.appendChild(document.createElement("br"));
-        li.appendChild(
-          document.createTextNode(
-            "Fine: " + getFine(book.bookreturn) +"rs"
-          )
-        );
-        li.appendChild(document.createElement("br"));
+          li.className = "p-5 bg-neutral-700 text-white";
+          var lid = document.createElement("div");
+          lid.appendChild(
+            document.createTextNode("Book name: " + book.bookname)
+          );
+          // li.appendChild(document.createTextNode(book.bookname));
+          lid.appendChild(document.createElement("br"));
+          lid.appendChild(
+            document.createTextNode(
+              "Book taken on: " + new Date(book.bookissue).toLocaleString()
+            )
+          );
+          lid.appendChild(document.createElement("br"));
+          lid.appendChild(
+            document.createTextNode(
+              "Book return date: " + new Date(book.bookreturn).toLocaleString()
+            )
+          );
+          lid.appendChild(document.createElement("br"));
+          lid.appendChild(
+            document.createTextNode("Fine: " + getFine(book.bookreturn) + "rs")
+          );
+          lid.appendChild(document.createElement("br"));
 
-        var uid = document.createElement("div");
-        uid.style.display = "none";
-        uid.appendChild(document.createTextNode(book.id));
-        li.appendChild(uid);
+          var uid = document.createElement("div");
+          uid.style.display = "none";
+          uid.appendChild(document.createTextNode(book.id));
+          lid.appendChild(uid);
 
-        var returnbtn = document.createElement("button");
-        returnbtn.className =
-          "bg-green-700 text-white px-2 py-1 text-xl mt-2 return";
-        returnbtn.appendChild(document.createTextNode("Return Book"));
-        li.appendChild(returnbtn);
-
-        books.appendChild(li);
-        }
-        else{
+          var returnbtn = document.createElement("button");
+          returnbtn.className =
+            "bg-green-700 text-white px-2 py-1 text-xl mt-2 return";
+          returnbtn.appendChild(document.createTextNode("Return Book"));
+          lid.appendChild(returnbtn);
+          li.appendChild(lid);
+          books.appendChild(li);
+        } else {
           var li = document.createElement("li");
-        li.className = "p-5 bg-neutral-700 text-white";
-        li.appendChild(document.createTextNode("Book name: " + book.bookname));
-        // li.appendChild(document.createTextNode(book.bookname));
-        li.appendChild(document.createElement("br"));
+          li.className = "p-5 bg-neutral-700 text-white";
+          li.appendChild(
+            document.createTextNode("Book name: " + book.bookname)
+          );
+          // li.appendChild(document.createTextNode(book.bookname));
+          li.appendChild(document.createElement("br"));
 
-        li.appendChild(
-          document.createTextNode(
-            "Returned on: " + new Date().toLocaleString()
-          )
-        );
-        li.appendChild(document.createElement("br"));
-        li.appendChild(
-          document.createTextNode(
-            "Fine: " + getFine(book.bookreturn) +"rs"
-          )
-        );
-        li.appendChild(document.createElement("br"));
+          li.appendChild(
+            document.createTextNode(
+              "Returned on: " + new Date().toLocaleString()
+            )
+          );
+          li.appendChild(document.createElement("br"));
+          li.appendChild(
+            document.createTextNode("Fine: " + getFine(book.bookreturn) + "rs")
+          );
+          li.appendChild(document.createElement("br"));
 
-        var uid = document.createElement("div");
-        uid.style.display = "none";
-        uid.appendChild(document.createTextNode(book.id));
-        li.appendChild(uid);
+          var uid = document.createElement("div");
+          uid.style.display = "none";
+          uid.appendChild(document.createTextNode(book.id));
+          li.appendChild(uid);
 
-        returnedbooks.appendChild(li);
+          returnedbooks.appendChild(li);
         }
-        
       }
 
       function addBook(e) {
@@ -204,16 +201,14 @@
           });
       }
 
-      function payFine(e){
-        if(e.target.classList.contains('return')){
-          var li=e.target.parentElement;
-                var uid=li.childNodes[6].firstChild.textContent;
-                axios.post(`${api}/admin/delete-expense`,{id:uid})
-                .then((res)=>{expenseList.removeChild(li);})
-                .catch((err)=>{console.log(err)})
+      function payFine(e) {
+        if (e.target.classList.contains("return")) {
+          var d= e.target.parentElement;
+          var li= d.parentElement;
+          d.style.display='none'
+          console.log(li);
         }
-    }
-
+      }
     </script>
   </body>
 </html>
