@@ -24,3 +24,17 @@ exports.postBook = (req, res, next) => {
     res.send(result);
   }).catch(err => console.log(err))
 };
+
+//payfine
+exports.payFine = (req, res, next) =>{
+  const id = req.body.id;
+  // const fine = req.body.fine;
+  Book.findOne({ where: { id: id } }).then(book => {
+    book.returnstatus = true;
+    book.paidfine = req.body.fine;
+    return book.save();
+  }).then((result)=>{
+    res.send(result);
+  }).catch(err => console.log(err))
+
+}

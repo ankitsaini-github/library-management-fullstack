@@ -10,4 +10,6 @@ router.get('/books', adminController.getBooks);
 
 router.post('/add-book', adminController.postBook);
 
+router.post('/payfine', adminController.payFine);
+
 module.exports = router;

@@ -16,6 +16,7 @@ const Book = sequelize.define('books', {
   bookissue: {type: Sequelize.DATE, allowNull: false},
   bookreturn: {type: Sequelize.DATE, allowNull: false},
   returnstatus: {type: Sequelize.BOOLEAN, allowNull: false},
+  paidfine: {type: Sequelize.INTEGER, allowNull: true},
 });
 
 module.exports = Book;

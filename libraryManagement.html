@@ -53,21 +53,14 @@
 
     <div>
       <ul class="mt-8 flex-col gap-4 text-xl" id="returnedbooks">
-        <li class="p-5 bg-neutral-700 text-white">
+        <!-- <li class="p-5 bg-neutral-700 text-white">
           <ul>
             <li>book name : mongodb</li>
             <li>fine : 0rs</li>
             <li>book returned on : 312312312</li>
           </ul>
-        </li>
+        </li> -->
 
-        <li class="p-5 bg-neutral-700 text-white">
-          <ul>
-            <li>book name : mongodb</li>
-            <li>fine : 0rs</li>
-            <li>book returned on : 312312312</li>
-          </ul>
-        </li>
       </ul>
     </div>
 
@@ -98,21 +91,50 @@
       function getFine(r) {
         const date1 = new Date(r);
         const date2 = new Date();
-        // console.log(date1,date2)
         if (date1 > date2) return 0;
         const differenceInMilliseconds = date2 - date1;
-
+        
         const differenceInHours = Math.floor(
           differenceInMilliseconds / (1000 * 60 * 60)
         );
-
-        return differenceInHours * 10;
+        // const differenceInHours = differenceInMilliseconds / (1000 * 60 * 60);
+ 
+        return (differenceInHours * 10)+10;
       }
 
       function showOnScreen(book) {
+        let fine= getFine(book.bookreturn);
         if (!book.returnstatus) {
+
           var li = document.createElement("li");
           li.className = "p-5 bg-neutral-700 text-white";
+
+          var lid1=document.createElement('div');
+          lid1.style.display = 'none';
+          let fineinput = document.createElement("input") 
+          fineinput.type='text';
+          fineinput.name = 'fineinput';
+          fineinput.value = `${fine} rs.`;
+          // fineinput.style.color='black';
+          fineinput.disabled=true;
+          fineinput.style.padding = '10px';
+          lid1.appendChild(fineinput);
+          lid1.appendChild(document.createElement("br"));
+
+          let cancelbtn = document.createElement('button');
+          cancelbtn.className =
+            "bg-slate-300 text-black px-2 py-1 text-xl mt-2 cancel";
+          cancelbtn.appendChild(document.createTextNode("Cancel"));
+          lid1.appendChild(cancelbtn);
+
+          let paybtn = document.createElement('button');
+          paybtn.className =
+            "bg-slate-100 text-black px-2 py-1 text-xl m-2 pay";
+          paybtn.appendChild(document.createTextNode("Pay fine"));
+          lid1.appendChild(paybtn);
+          
+          li.appendChild(lid1);
+
           var lid = document.createElement("div");
           lid.appendChild(
             document.createTextNode("Book name: " + book.bookname)
@@ -132,7 +154,7 @@
           );
           lid.appendChild(document.createElement("br"));
           lid.appendChild(
-            document.createTextNode("Fine: " + getFine(book.bookreturn) + "rs")
+            document.createTextNode("Fine: " + fine + "rs")
           );
           lid.appendChild(document.createElement("br"));
 
@@ -164,7 +186,7 @@
           );
           li.appendChild(document.createElement("br"));
           li.appendChild(
-            document.createTextNode("Fine: " + getFine(book.bookreturn) + "rs")
+            document.createTextNode("Fine: " + book.paidfine + "rs")
           );
           li.appendChild(document.createElement("br"));
 
@@ -195,6 +217,7 @@
           .post(`${api}/admin/add-book`, newbook)
           .then((response) => {
             showOnScreen(response.data);
+            document.getElementById("bookname").value='';
           })
           .catch((err) => {
             console.log(err);
@@ -205,8 +228,32 @@
         if (e.target.classList.contains("return")) {
           var d= e.target.parentElement;
           var li= d.parentElement;
-          d.style.display='none'
-          console.log(li);
+          d.style.display='none';
+          li.firstChild.style.display='block';
+        }
+        if(e.target.classList.contains('cancel')){
+          let d= e.target.parentElement;
+          let li= d.parentElement;
+          d.style.display='none';
+          li.childNodes[1].style.display='block';
+        }
+        if(e.target.classList.contains('pay')){
+          let li=e.target.parentElement.parentElement
+          let id= li.childNodes[1].childNodes[8].textContent;
+          let fine=li.childNodes[1].childNodes[6].textContent.replace(/\D/g, "");
+          let bookslist = li.parentElement;
+          // console.log('pay fine: ',li);
+
+          axios
+          .post(`${api}/admin/payfine`, {id:id,fine:fine})
+          .then((response) => {
+            
+            showOnScreen(response.data);
+            bookslist.removeChild(li)
+          })
+          .catch((err) => {
+            console.log(err);
+          });
         }
       }
     </script>
